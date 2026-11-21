@@ -4,14 +4,15 @@
   "episodes": [
     {
       "id": "2026-11-21",
-      "title": "Zero-click, assistants, and the front door",
+      "title": "Episode 1: Overnight runs, and good enough",
       "date": "2026-11-21",
       "date_label": "21 November 2026",
-      "duration_seconds": 677,
-      "duration_label": "11 min",
+      "duration_seconds": 1492,
+      "duration_label": "25 min",
+      "chapters": 9,
       "cover": "episodes/2026-11-21/episode-cover.jpg",
       "url": "episodes/2026-11-21/",
-      "audio": "https://files.leadconnectorhq.com/file/6b010260d50d9db7963115b2/2026-11-21-keeping-up-to-speed.mp3"
+      "audio": "episodes/2026-11-21/episode.mp3"
     }
   ]
 }
