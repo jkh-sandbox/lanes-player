@@ -3,6 +3,18 @@
   "tagline": "A weekly briefing from the lanes",
   "episodes": [
     {
+      "id": "2026-11-27",
+      "title": "Episode 2: The head start is gone",
+      "date": "2026-11-27",
+      "date_label": "27 November 2026",
+      "duration_seconds": 1678,
+      "duration_label": "28 min",
+      "chapters": 8,
+      "cover": "episodes/2026-11-27/episode-cover.jpg",
+      "url": "episodes/2026-11-27/",
+      "audio": "episodes/2026-11-27/episode.mp3"
+    },
+    {
       "id": "2026-11-21",
       "title": "Episode 1: Overnight runs, and good enough",
       "date": "2026-11-21",

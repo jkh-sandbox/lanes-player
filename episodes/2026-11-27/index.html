@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#000000" />
+  <title>Keeping up to speed · Episode 2 · 27 Nov 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #000000;
+      --bg-elev: #121212;
+      --bg-card: #181818;
+      --bg-row: #1F1F1F;
+      --text: #FFFFFF;
+      --text-2: #B3B3B3;
+      --text-3: #7A7A7A;
+      --line: rgba(255,255,255,0.08);
+      --track: rgba(255,255,255,0.22);
+      --fill: #FFFFFF;
+      --play: #FFFFFF;
+      --play-icon: #000000;
+      --accent: #A855F7;
+      --tint: #2A2C64;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font-family: inherit; color: inherit; }
+    audio { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+
+    .backdrop {
+      position: fixed;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 78vh;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .backdrop img {
+      width: 140%;
+      height: 140%;
+      margin: -20%;
+      object-fit: cover;
+      filter: blur(72px) saturate(1.35);
+      opacity: 0.72;
+      transform: translateZ(0);
+    }
+    .backdrop::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg,
+        rgba(0,0,0,0.12) 0%,
+        rgba(18,18,18,0.55) 48%,
+        #121212 78%,
+        #000 100%);
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+      padding: calc(12px + var(--safe-top)) 24px calc(36px + var(--safe-bot));
+    }
+    .app.has-mini { padding-bottom: calc(108px + var(--safe-bot)); }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 44px;
+      margin-bottom: 18px;
+    }
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 44px;
+      margin-left: -8px;
+      padding: 0 8px 0 2px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .back svg { width: 22px; height: 22px; flex: 0 0 22px; }
+    .back:active { opacity: 0.7; }
+    .top-actions { display: flex; gap: 4px; }
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .icon-btn svg { width: 22px; height: 22px; }
+
+    .cover-wrap {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .cover {
+      width: min(100%, calc(100dvh - 24rem));
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 12px;
+      display: block;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.35);
+      background: #0B1020;
+    }
+
+    .titles { margin-top: 20px; }
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+    .show {
+      margin: 8px 0 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .scrub { margin-top: 22px; }
+    .bar {
+      position: relative;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      touch-action: none;
+    }
+    .bar-track {
+      width: 100%;
+      height: 4px;
+      border-radius: 99px;
+      background: var(--track);
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--fill);
+      border-radius: 99px;
+    }
+    .thumb {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.45);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .times {
+      display: flex;
+      justify-content: space-between;
+      margin-top: -2px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .transport {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      margin-top: 10px;
+    }
+    .skip {
+      width: 52px;
+      height: 52px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .skip svg { width: 36px; height: 36px; }
+    .play {
+      width: 72px;
+      height: 72px;
+      border: none;
+      border-radius: 50%;
+      background: var(--play);
+      color: var(--play-icon);
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      flex: 0 0 72px;
+    }
+    .play svg { width: 32px; height: 32px; }
+    .play[aria-label^="Play"] svg { margin-left: 3px; }
+    .play:active { transform: scale(0.96); }
+    .skip:active, .icon-btn:active { opacity: 0.7; }
+
+    .tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 8px;
+      min-height: 44px;
+    }
+    .speed {
+      min-width: 56px;
+      height: 32px;
+      padding: 0 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 99px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .speed.is-fast {
+      border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+    }
+    .now-ch {
+      flex: 1;
+      text-align: right;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .intro { margin-top: 8px; }
+    .stars {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      margin: 10px 0 0;
+    }
+    .stars button {
+      border: none;
+      background: transparent;
+      padding: 8px;
+      margin: 0;
+      min-width: 44px;
+      min-height: 44px;
+      cursor: pointer;
+      color: #5A5A5A;
+      font-size: 26px;
+      line-height: 26px;
+    }
+    .stars button.on { color: var(--accent); }
+
+    .blurb {
+      margin: 8px 0 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-2);
+    }
+    .see {
+      margin: 4px 0 0;
+      padding: 0;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font: 600 14px inherit;
+      cursor: pointer;
+      min-height: 36px;
+    }
+
+    .missed {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--bg-card);
+      border-radius: 14px;
+    }
+    .missed.show { display: flex; }
+    .missed h2 { font-size: 15px; margin: 0 0 8px; }
+    .missed label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      font-size: 14px;
+      color: var(--text-2);
+    }
+    .missed input[type="text"] {
+      width: 100%;
+      min-height: 44px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--bg-row);
+      color: var(--text);
+      padding: 10px 12px;
+      font: 15px inherit;
+    }
+
+    .card {
+      margin-top: 20px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      padding: 18px 16px 16px;
+    }
+    .card h2 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .cap {
+      margin: 0 0 12px;
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    .chs { display: flex; flex-direction: column; }
+    .chs button {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--text);
+      padding: 12px 10px;
+      min-height: 48px;
+      cursor: pointer;
+      font: 15px/1.3 inherit;
+    }
+    .chs button + button { border-top: 1px solid var(--line); border-radius: 0; }
+    .chs button .t {
+      flex: 0 0 42px;
+      font-size: 13px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-2);
+    }
+    .chs button.active { color: var(--accent); }
+    .chs button.active .t { color: var(--accent); }
+
+    .hl { display: flex; flex-direction: column; }
+    .hl-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 12px 2px;
+    }
+    .hl-item + .hl-item { border-top: 1px solid var(--line); }
+    .num {
+      width: 22px;
+      flex: 0 0 22px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-3);
+      line-height: 20px;
+    }
+    .hl-item h3 { margin: 0; font-size: 15px; line-height: 1.35; font-weight: 600; }
+    .hl-item p { margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--text-2); }
+
+    .links { display: flex; flex-direction: column; margin-top: 8px; }
+    .links a {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-decoration: none;
+      color: var(--text);
+      padding: 12px 2px;
+      min-height: 52px;
+    }
+    .links a + a { border-top: 1px solid var(--line); }
+    .links a strong { font-size: 14px; font-weight: 600; }
+    .links a span { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+    details.fold { border-top: 1px solid var(--line); }
+    details.fold:first-of-type { border-top: none; }
+    details.fold > summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 16px 2px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      min-height: 52px;
+    }
+    details.fold > summary::-webkit-details-marker { display: none; }
+    details.fold > summary::after {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid var(--text-3);
+      border-bottom: 2px solid var(--text-3);
+      transform: rotate(45deg);
+      flex: 0 0 8px;
+      margin-top: -4px;
+    }
+    details.fold[open] > summary::after { transform: rotate(225deg); margin-top: 4px; }
+    .excerpt { padding: 0 2px 16px; }
+    .excerpt h3 { font-size: 16px; margin: 18px 0 8px; letter-spacing: -0.02em; }
+    .props { font-size: 13px; color: var(--text-2); margin: 0 0 10px; }
+    .props div { margin: 4px 0; }
+    .props b { color: var(--text); font-weight: 600; }
+    .quote {
+      margin: 10px 0;
+      padding: 12px 0 12px 14px;
+      border-left: 2px solid var(--accent);
+      color: var(--text-2);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .quote cite {
+      display: block;
+      margin-top: 8px;
+      font-style: normal;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+    .excerpt p { font-size: 14px; line-height: 1.55; color: var(--text-2); }
+    .row { padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .row:last-child { border-bottom: none; }
+    .row h3 { margin: 0; font-size: 14px; font-weight: 600; }
+    .row p { margin: 4px 0 0; font-size: 13px; color: var(--text-2); }
+    .row .meta { font-size: 11px; color: var(--accent); margin-top: 4px; font-weight: 600; }
+
+    .mini {
+      display: none;
+      position: fixed;
+      left: 50%;
+      bottom: calc(12px + var(--safe-bot));
+      transform: translateX(-50%);
+      z-index: 30;
+      width: min(390px, calc(100vw - 24px));
+      background: #1A1A1A;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 8px;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+      cursor: pointer;
+      text-align: left;
+      align-items: center;
+      gap: 10px;
+      backdrop-filter: blur(20px);
+    }
+    .mini.show { display: flex; }
+    .mini img {
+      width: 48px;
+      height: 48px;
+      border-radius: 6px;
+      flex: 0 0 48px;
+      object-fit: cover;
+    }
+    .mini .meta { flex: 1; min-width: 0; }
+    .mini .ttl {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 18px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .mini .sub { font-size: 12px; color: var(--text-2); margin-top: 2px; }
+    .mini .mp {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--play);
+      color: var(--play-icon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 40px;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .mini .mp svg { width: 18px; height: 18px; }
+
+    @media (min-width: 960px) {
+      .backdrop { height: 100vh; }
+      .backdrop::after {
+        background: linear-gradient(180deg,
+          rgba(0,0,0,0.25) 0%,
+          rgba(0,0,0,0.55) 40%,
+          #000 100%);
+      }
+      .app {
+        max-width: 1080px;
+        display: grid;
+        grid-template-columns: minmax(360px, 480px) minmax(360px, 1fr);
+        gap: 56px;
+        align-items: start;
+        padding: 48px 56px 64px;
+      }
+      .now { position: sticky; top: 48px; }
+      .app.has-mini { padding-bottom: 64px; }
+      .mini { display: none !important; }
+      h1 { font-size: 26px; }
+      .cover { width: 100%; border-radius: 14px; }
+      .intro { display: flex; flex-direction: column; margin: 0 0 8px; }
+      .stars { order: 3; justify-content: flex-start; margin-top: 12px; }
+      .blurb { order: 1; margin-top: 0; }
+      .see { order: 2; align-self: flex-start; }
+      .below { padding-top: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="backdrop" aria-hidden="true"><img src="episode-cover.jpg" alt="" /></div>
+  <audio id="audio" preload="metadata" playsinline webkit-playsinline></audio>
+
+  <div class="app" id="app">
+    <section class="now" id="now">
+      <div class="top">
+        <a class="back" href="../../" aria-label="All episodes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg>
+          All episodes
+        </a>
+        <div class="top-actions">
+          <button type="button" class="icon-btn" id="share" aria-label="Share">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 14V4"/><path d="M8 7.5 12 4l4 3.5"/><path d="M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12"/></svg>
+          </button>
+          <button type="button" class="icon-btn" id="bookmark" aria-label="Bookmark">
+            <svg id="bookmarkIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5h10A1.5 1.5 0 0 1 18.5 6v14L12 16.5 5.5 20V6A1.5 1.5 0 0 1 7 4.5z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="cover-wrap">
+        <img class="cover" src="episode-cover.jpg" alt="Five round speakers lined up level on a dark shelf, with violet, blue and teal lanes sweeping away from the same starting line." />
+      </div>
+
+      <div class="titles">
+        <h1>Episode 2: The head start is gone</h1>
+        <p class="show">Keeping up to speed · 27 November</p>
+      </div>
+
+      <div class="scrub">
+        <div class="bar" id="scrub" role="slider" aria-label="Episode position" aria-valuemin="0" aria-valuemax="1678" aria-valuenow="0">
+          <div class="bar-track"><div class="bar-fill" id="fill"></div></div>
+          <div class="thumb" id="thumb"></div>
+        </div>
+        <div class="times"><span id="elapsed">0:00</span><span id="remain">-27:58</span></div>
+      </div>
+
+      <div class="transport">
+        <button type="button" class="skip" id="back15" aria-label="Skip back 15 seconds">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M7.2 9.1A11.5 11.5 0 1 0 8.6 7.2"/>
+            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6.4 4.2v5.2h5.2"/>
+            <text x="16" y="20.4" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif">15</text>
+          </svg>
+        </button>
+        <button type="button" class="play" id="play" aria-label="Play, 28 minutes">
+          <svg id="playIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 5.2v13.6L19.2 12 8.2 5.2z" fill="currentColor"/></svg>
+        </button>
+        <button type="button" class="skip" id="fwd30" aria-label="Skip forward 30 seconds">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M24.8 9.1A11.5 11.5 0 1 1 23.4 7.2"/>
+            <path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M25.6 4.2v5.2h-5.2"/>
+            <text x="16" y="20.4" text-anchor="middle" font-size="9.5" font-weight="700" fill="currentColor" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif">30</text>
+          </svg>
+        </button>
+      </div>
+
+      <div class="tools">
+        <button type="button" class="speed" id="speedBtn" aria-label="Playback speed, currently 1 times">1×</button>
+        <div class="now-ch" id="nowChapter">Intro</div>
+      </div>
+
+    </section>
+
+    <div class="below">
+      <div class="intro">
+        <div class="stars" id="stars" role="group" aria-label="Rating"></div>
+        <p class="blurb" id="blurb">A briefing from four talks this week: why there's no longer a best model, a founder who says you're paying thirty times too much, how the biggest company in town lost its head start, and what nobody can flatten, from a decade in Amazon's boardroom.</p>
+        <button type="button" class="see" id="see">Show more</button>
+      </div>
+
+      <div class="missed" id="missed">
+        <h2>What went wrong?</h2>
+        <label><input type="checkbox" /> Wrong topic</label>
+        <label><input type="checkbox" /> Too long</label>
+        <label><input type="checkbox" /> Too shallow</label>
+        <label><input type="checkbox" /> Already known</label>
+        <label><input type="checkbox" /> Poor excerpt</label>
+        <label><input type="checkbox" /> Voice or delivery</label>
+        <input type="text" placeholder="Anything else (optional)" aria-label="Anything else" />
+      </div>
+
+      <section class="card">
+        <h2>Chapters</h2>
+        <p class="cap">Jump to a section</p>
+        <div class="chs" id="chapters"></div>
+      </section>
+
+      <section class="card">
+        <h2>Highlights</h2>
+        <div class="hl">
+          <div class="hl-item"><div class="num">1</div><div><h3>There&#x27;s no longer a best model, only the best model for a shape of work.</h3><p>Nate B Jones sorts work into forest, forest-and-trees and trees problems. Independent tests found OpenAI&#x27;s new Astra flat on coding but leading science, 3-D and robotics: a spike most reviewers couldn&#x27;t see from where they stood. Audit the task, chain two models, and test outside your own lane.</p></div></div>
+          <div class="hl-item"><div class="num">2</div><div><h3>The gap at the top is small, and the premium doesn&#x27;t last.</h3><p>Suhail Doshi, who sells cheaper open-model tokens, found a cheap open model matched a top model on his own design tasks at about a thirtieth of the cost. Keep a small eval folder built from your own work. Models also do better working on files directly than through an app.</p></div></div>
+          <div class="hl-item"><div class="num">3</div><div><h3>A new front door opened, and every business started from zero.</h3><p>ChatGPT&#x27;s business profiles launched in beta on 10 November. Local listings are US-only for now, and business agents are open first to online sellers. Phil Risher&#x27;s moves for the small player: other ponds, real content, past customers and referral partners.</p></div></div>
+          <div class="hl-item"><div class="num">4</div><div><h3>What nobody can flatten: a customer made to feel like a VIP.</h3><p>Bing Gordon named Amazon Prime and spent a decade on Amazon&#x27;s board. Add emotion to the economics, offer a second currency, build values into the daily routine, and push from good to great when everyone else stops.</p></div></div>
+        </div>
+        <div class="links">
+          <a href="https://youtu.be/y0WVOisJ6Js"><strong>No such thing as the best model</strong><span>YouTube · Nate B Jones</span></a>
+          <a href="https://youtu.be/K2UEMxBTu9M"><strong>Thirty times cheaper</strong><span>YouTube · Suhail Doshi with Riley Brown</span></a>
+          <a href="https://youtu.be/fC44Clivoos"><strong>The head start is gone</strong><span>YouTube · Phil Risher, Phlash Consulting</span></a>
+          <a href="https://youtu.be/EsNvJrkgAr4"><strong>What you can&#x27;t flatten</strong><span>YouTube · Bing Gordon with Shane Parrish</span></a>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Transcript</h2>
+        <p class="cap">Segment notes, sources and disclaimer are tucked away here.</p>
+
+        <details class="fold">
+          <summary>Segment notes</summary>
+          <div class="excerpt">
+            <h3>1. No such thing as the best model</h3>
+            <div class="props">
+              <div><b>Speaker</b> Nate B Jones</div>
+              <div><b>Disclosure</b> Promotes a prompt pack on his Substack.</div>
+              <div><b>Source</b> Solo talk, 23 November 2026 (22:28)</div>
+            </div>
+            <p>Two launches, opposite reviews, both right. Forest, forest-and-trees and trees problems; the sea urchin and its shadow; a leap ninety degrees away. Checked against Artificial Analysis (17 Nov) and Google&#x27;s Neon launch (18 Nov), which pitches Neon for coding and agents, not just writing.</p>
+
+            <h3>2. Thirty times cheaper</h3>
+            <div class="props">
+              <div><b>Speaker</b> Suhail Doshi with Riley Brown</div>
+              <div><b>Disclosure</b> Doshi&#x27;s company, Particle, sells open-model tokens. Patrick Collison is named as an investor.</div>
+              <div><b>Source</b> Conversation, 21 November 2026 (1:00:49)</div>
+            </div>
+            <p>Open-weight models flatten the field; the frontier premium lasts months; keep your own eval; headless work beats the app; &quot;the features are in the model now.&quot; Particle&#x27;s own launch figure is about 45% fewer tokens on coding work, not yet independently reproduced.</p>
+
+            <h3>3. The head start is gone</h3>
+            <div class="props">
+              <div><b>Speaker</b> Phil Risher, Phlash Consulting</div>
+              <div><b>Disclosure</b> Pitches his agency and book at the end.</div>
+              <div><b>Source</b> Solo talk, 24 November 2026 (21:33)</div>
+            </div>
+            <p>ChatGPT business profiles (beta, 10 Nov; local listings US-only; agents for online businesses first). BrightLocal: 45% of US consumers used AI for local recommendations in the past year, up from 6%. Other ponds, real content, the agitate-the-problem email, and referral partners.</p>
+
+            <h3>4. What you can&#x27;t flatten</h3>
+            <div class="props">
+              <div><b>Speaker</b> Bing Gordon with Shane Parrish</div>
+              <div><b>Disclosure</b> Sponsor reads in the episode. Gordon is a venture investor.</div>
+              <div><b>Source</b> Interview, 24 November 2026 (1:10:05)</div>
+            </div>
+            <p>Prime&#x27;s origin as a loyalty idea; the VIP entitlement and the second currency; be right a lot and two-way doors; values built into the daily fabric; good to great; density of detail.</p>
+
+          </div>
+        </details>
+
+        <details class="fold">
+          <summary>Originals</summary>
+          <div class="excerpt">
+            <div class="links">
+              <a href="https://youtu.be/y0WVOisJ6Js"><strong>GPT-6.2 Astra got brutal reviews. Gemini 4 Neon got raves. Here&#x27;s why both are right.</strong><span>Nate B Jones · 23 Nov 2026 · 22:28</span></a>
+              <a href="https://youtu.be/K2UEMxBTu9M"><strong>Open Source AI Is Dangerously Close to Claude (And 30x Cheaper)</strong><span>Suhail Doshi with Riley Brown · 21 Nov 2026 · 1:00:49</span></a>
+              <a href="https://youtu.be/fC44Clivoos"><strong>The Biggest Company in Town Just Lost Its Advantage</strong><span>Phil Risher, Phlash Consulting · 24 Nov 2026 · 21:33</span></a>
+              <a href="https://youtu.be/EsNvJrkgAr4"><strong>Everything I Learned Working with Jeff Bezos for 10 Years</strong><span>Bing Gordon with Shane Parrish · 24 Nov 2026 · 1:10:05</span></a>
+            </div>
+            <p>Drawn from these four videos. Dialogue is condensed and paraphrased from the transcripts, keeping each speaker's intent. All four transcripts were fetched in full on 27 Nov 2026.</p>
+          </div>
+        </details>
+
+        <details class="fold">
+          <summary>Fact checks</summary>
+          <div class="excerpt">
+            <div class="links">
+              <a href="https://artificialanalysis.ai/articles/openai-has-the-2-model-in-the-intelligence-index-with-the-release-of-gpt-6-2-astra-and-gpt-6-2-sol"><strong>Artificial Analysis — GPT-6.2 Astra and Sol</strong><span>Source</span></a>
+              <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/"><strong>Google — Introducing Gemini 4 Neon</strong><span>Source</span></a>
+              <a href="https://particle.ai/blog/introducing-particle-1"><strong>Particle — Introducing Particle-1</strong><span>Source</span></a>
+              <a href="https://openai.com/index/introducing-businesses-chatgpt/"><strong>OpenAI — Introducing Businesses in ChatGPT</strong><span>Source</span></a>
+              <a href="https://help.openai.com/en/articles/20001635-setting-up-your-business-on-chatgpt"><strong>OpenAI Help — Setting up your business on ChatGPT</strong><span>Source</span></a>
+              <a href="https://www.brightlocal.com/research/lcrs-ai-trust/"><strong>BrightLocal — AI for local recommendations</strong><span>Source</span></a>
+              <a href="https://developers.google.com/search/docs/fundamentals/ai-optimization-guide"><strong>Google — Optimizing for generative AI features</strong><span>Source</span></a>
+            </div>
+          </div>
+        </details>
+
+        <details class="fold">
+          <summary>Predictions touched</summary>
+          <div class="excerpt">
+            <div class="row"><h3>FR-011</h3><p>Software goes headless: refined. Models may do better working on the files directly than through an app&#x27;s connector.</p></div>
+            <div class="row"><h3>FR-006, FR-015</h3><p>AI visibility and the knowledge catalogue: ChatGPT business profiles are now live in beta.</p></div>
+            <div class="row"><h3>New, watching</h3><p>The frontier premium lasts about six months (Doshi). Trigger: whether Anthropic&#x27;s top model still commands a premium around May 2027.</p></div>
+          </div>
+        </details>
+
+        <details class="fold">
+          <summary>Disclaimer</summary>
+          <div class="excerpt">
+            <p>Dialogue condensed and re-voiced by AI from the linked sources. The voices are Grok voices (Ursa and Rex), not the original speakers.</p>
+          </div>
+        </details>
+      </section>
+    </div>
+  </div>
+
+  <button type="button" class="mini" id="mini" aria-label="Back to player">
+    <img src="episode-cover.jpg" alt="" />
+    <div class="meta">
+      <div class="ttl">Episode 2: The head start is gone</div>
+      <div class="sub" id="miniSub">27 November · 0:00</div>
+    </div>
+    <span class="mp" id="miniPlay" aria-label="Play">
+      <svg id="miniIcon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.2 5.2v13.6L19.2 12 8.2 5.2z" fill="currentColor"/></svg>
+    </span>
+  </button>
+
+  <script>
+  (function () {
+    const AUDIO_SRC = "episode.mp3";
+    const COVER = "episode-cover.jpg";
+    const COVER_ABS = new URL(COVER, window.location.href).href;
+    const DURATION = 1678;
+    const SPEEDS = [1, 1.25, 1.5, 2];
+    const ICON_PLAY = '<path d="M8.2 5.2v13.6L19.2 12 8.2 5.2z" fill="currentColor"/>';
+    const ICON_PAUSE = '<rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/>';
+    const CHAPTERS = [
+      { at: 0, label: "Intro" },
+      { at: 81, label: "No such thing as the best model" },
+      { at: 390, label: "Thirty times cheaper" },
+      { at: 727, label: "The head start is gone" },
+      { at: 995, label: "What you can't flatten" },
+      { at: 1354, label: "What to build when everyone has the same tools" },
+      { at: 1530, label: "Where this is heading" },
+      { at: 1599, label: "The originals" }
+    ];
+    const MORE = " Drawn from Nate B Jones, Suhail Doshi with Riley Brown, Phil Risher, and Bing Gordon with Shane Parrish. Read by two AI hosts, Ursa and Rex. Dialogue condensed and re-voiced by AI from the linked sources.";
+    const SHORT = "A briefing from four talks this week: why there's no longer a best model, a founder who says you're paying thirty times too much, how the biggest company in town lost its head start, and what nobody can flatten, from a decade in Amazon's boardroom.";
+
+    const audio = document.getElementById("audio");
+    audio.setAttribute("playsinline", "");
+    audio.setAttribute("webkit-playsinline", "");
+    audio.preload = "metadata";
+    audio.src = AUDIO_SRC;
+
+    const $ = (id) => document.getElementById(id);
+    const app = $("app");
+    const mini = $("mini");
+    const fill = $("fill");
+    const thumb = $("thumb");
+    const elapsedEl = $("elapsed");
+    const remainEl = $("remain");
+    const nowChapter = $("nowChapter");
+    const miniSub = $("miniSub");
+    const scrub = $("scrub");
+    const speedBtn = $("speedBtn");
+    const playBtn = $("play");
+
+    let playing = false;
+    let started = false;
+    let speed = 1;
+    let more = false;
+    let saved = false;
+    let stars = 0;
+
+    function fmt(total) {
+      const s = Math.max(0, Math.min(DURATION, Math.round(total || 0)));
+      return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    }
+    function chapterAt(sec) {
+      let cur = CHAPTERS[0];
+      for (const c of CHAPTERS) if (sec >= c.at) cur = c;
+      return cur;
+    }
+    function setIcon(id, isPlaying) {
+      const el = $(id);
+      if (!el) return;
+      el.innerHTML = isPlaying ? ICON_PAUSE : ICON_PLAY;
+    }
+    function renderPlay() {
+      setIcon("playIcon", playing);
+      setIcon("miniIcon", playing);
+      playBtn.setAttribute("aria-label", playing ? "Pause" : "Play, 28 minutes");
+      $("miniPlay").setAttribute("aria-label", playing ? "Pause" : "Play");
+    }
+    function renderTime() {
+      const t = audio.currentTime || 0;
+      const pct = (t / DURATION) * 100;
+      fill.style.width = pct + "%";
+      thumb.style.left = pct + "%";
+      elapsedEl.textContent = fmt(t);
+      remainEl.textContent = "-" + fmt(Math.max(0, DURATION - t));
+      nowChapter.textContent = chapterAt(t).label;
+      miniSub.textContent = "27 November · " + fmt(t);
+      scrub.setAttribute("aria-valuenow", String(Math.round(t)));
+      document.querySelectorAll("#chapters button").forEach((btn, i) => {
+        btn.classList.toggle("active", chapterAt(t).at === CHAPTERS[i].at);
+      });
+    }
+    function setupMediaSession() {
+      if (!("mediaSession" in navigator)) return;
+      try {
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: "Episode 2: The head start is gone",
+          artist: "Keeping up to speed · Ursa and Rex",
+          album: "Lanes briefings",
+          artwork: [
+            { src: COVER_ABS, sizes: "96x96", type: "image/jpeg" },
+            { src: COVER_ABS, sizes: "256x256", type: "image/jpeg" },
+            { src: COVER_ABS, sizes: "512x512", type: "image/jpeg" }
+          ]
+        });
+        const handle = (name, fn) => {
+          try { navigator.mediaSession.setActionHandler(name, fn); } catch (e) {}
+        };
+        handle("play", function () { playFromGesture(); });
+        handle("pause", function () { pause(); });
+        handle("seekbackward", function (d) { seekTo((audio.currentTime || 0) - ((d && d.seekOffset) || 15)); });
+        handle("seekforward", function (d) { seekTo((audio.currentTime || 0) + ((d && d.seekOffset) || 30)); });
+        handle("seekto", function (d) { if (d && d.seekTime != null) seekTo(d.seekTime); });
+      } catch (e) {}
+    }
+    function playFromGesture() {
+      started = true;
+      audio.playbackRate = speed;
+      if (audio.currentTime >= DURATION - 0.25) audio.currentTime = 0;
+      const p = audio.play();
+      if (p && typeof p.then === "function") {
+        p.then(function () {
+          playing = true;
+          renderPlay();
+          setupMediaSession();
+        }).catch(function () {
+          playing = false;
+          renderPlay();
+        });
+      } else {
+        playing = true;
+        renderPlay();
+        setupMediaSession();
+      }
+    }
+    function pause() {
+      audio.pause();
+      playing = false;
+      renderPlay();
+    }
+    function togglePlay() {
+      if (playing || !audio.paused) pause();
+      else playFromGesture();
+    }
+    function seekTo(next) {
+      const t = Math.max(0, Math.min(DURATION, next));
+      audio.currentTime = t;
+      renderTime();
+    }
+
+    audio.addEventListener("timeupdate", renderTime);
+    audio.addEventListener("loadedmetadata", renderTime);
+    audio.addEventListener("play", function () { playing = true; renderPlay(); });
+    audio.addEventListener("pause", function () { playing = false; renderPlay(); });
+    audio.addEventListener("ended", function () {
+      playing = false;
+      renderPlay();
+      seekTo(DURATION);
+    });
+
+    playBtn.addEventListener("click", togglePlay);
+    $("miniPlay").addEventListener("click", function (e) {
+      e.stopPropagation();
+      togglePlay();
+    });
+    mini.addEventListener("click", function () {
+      $("now").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    $("back15").addEventListener("click", function () { seekTo((audio.currentTime || 0) - 15); });
+    $("fwd30").addEventListener("click", function () { seekTo((audio.currentTime || 0) + 30); });
+    speedBtn.addEventListener("click", function () {
+      const i = SPEEDS.indexOf(speed);
+      speed = SPEEDS[(i + 1) % SPEEDS.length];
+      audio.playbackRate = speed;
+      speedBtn.textContent = speed + "×";
+      speedBtn.classList.toggle("is-fast", speed !== 1);
+      speedBtn.setAttribute("aria-label", "Playback speed, currently " + speed + " times");
+    });
+
+    function seekFromEvent(e) {
+      const point = e.touches ? e.touches[0] : e;
+      const rect = scrub.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      const ratio = Math.max(0, Math.min(1, (point.clientX - rect.left) / rect.width));
+      seekTo(ratio * DURATION);
+    }
+    scrub.addEventListener("click", seekFromEvent);
+    scrub.addEventListener("pointerdown", function (e) {
+      seekFromEvent(e);
+      const move = (ev) => seekFromEvent(ev);
+      const up = () => {
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+      };
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+    });
+
+    const chRoot = $("chapters");
+    CHAPTERS.forEach(function (c) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.innerHTML = '<span class="t">' + fmt(c.at) + "</span><span>" + c.label + "</span>";
+      b.addEventListener("click", function () { seekTo(c.at); });
+      chRoot.appendChild(b);
+    });
+
+    $("see").addEventListener("click", function () {
+      more = !more;
+      $("blurb").textContent = SHORT + (more ? MORE : "");
+      $("see").textContent = more ? "Show less" : "Show more";
+    });
+    $("share").addEventListener("click", function () {
+      const data = { title: "Episode 2: The head start is gone", url: location.href };
+      if (navigator.share) {
+        navigator.share(data).catch(function () {
+          if (navigator.clipboard) navigator.clipboard.writeText(location.href).catch(function () {});
+        });
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(location.href).catch(function () {});
+      }
+    });
+    $("bookmark").addEventListener("click", function () {
+      saved = !saved;
+      const icon = $("bookmarkIcon");
+      icon.setAttribute("fill", saved ? "currentColor" : "none");
+      $("bookmark").setAttribute("aria-label", saved ? "Remove bookmark" : "Bookmark");
+    });
+
+    const starRoot = $("stars");
+    for (let n = 1; n <= 5; n++) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "★";
+      b.setAttribute("aria-label", n + (n === 1 ? " star" : " stars"));
+      b.addEventListener("click", function () {
+        stars = n;
+        Array.from(starRoot.children).forEach(function (el, i) {
+          el.classList.toggle("on", i < stars);
+        });
+        $("missed").classList.toggle("show", stars > 0 && stars <= 2);
+      });
+      starRoot.appendChild(b);
+    }
+
+    if ("IntersectionObserver" in window) {
+      const io = new IntersectionObserver(function (entries) {
+        const visible = entries[0] && entries[0].isIntersecting;
+        mini.classList.toggle("show", !visible);
+        app.classList.toggle("has-mini", !visible);
+      }, { threshold: 0.15 });
+      io.observe($("now"));
+    }
+
+    renderPlay();
+    renderTime();
+    setupMediaSession();
+  })();
+  </script>
+</body>
+</html>
